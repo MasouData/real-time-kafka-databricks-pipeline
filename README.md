@@ -18,6 +18,10 @@ The goal of this project is to practice and demonstrate a realistic streaming da
 
 This project is designed as a practical portfolio project for data engineering roles. It covers streaming ingestion, Medallion architecture, data quality, enrichment, orchestration, deployment, and dashboarding.
 
+## Architecture Diagram
+
+![Real-Time Kafka to Databricks Lakehouse Pipeline](docs/architecture.png)
+
 ---
 
 ## Architecture
