@@ -1,0 +1,56 @@
+# This is a Databricks asset bundle definition for asset_bundle_project.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: asset_bundle_project
+  uuid: ced6ea02-1fb8-423e-bc7c-13cc9e5abc9a
+
+sync:
+  include:
+    - src/**
+    - resources/**
+    - databricks.yml
+  exclude:
+    - .databricks/**
+    - .vscode/**
+    - .venv_1/**
+    - .venv/**
+    - envs/**
+    - my_env/**
+    - __pycache__/**
+    - "*.pyc"
+    - deploy_debug.log
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+# Variable declarations. These variables are assigned in the dev/prod targets below.
+variables:
+  catalog:
+    default: main
+  schema:
+    default: default
+
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405619845701250.10.azuredatabricks.net
+    variables:
+      catalog: demodatabricks_7405619845701250
+      schema: dev
+    presets:
+      artifacts_dynamic_version: true
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-7405619845701250.10.azuredatabricks.net
+      root_path: /Workspace/Users/ghazaleh.tanhaei@kuleuven.be/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: demodatabricks_7405619845701250
+      schema: prod
+    permissions:
+      - user_name: ghazaleh.tanhaei@kuleuven.be
+        level: CAN_MANAGE

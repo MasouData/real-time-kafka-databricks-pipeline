@@ -1,0 +1,18 @@
+resources:
+  pipelines:
+    pipeline_first_etl_pipeline:
+      name: first_ETL_pipeline_bundle
+      libraries:
+        - glob:
+            include: ../src/transformations/**
+      schema: ${var.schema}
+      photon: true
+      catalog: ${var.catalog}
+      notifications:
+        - email_recipients:
+            - masoud.aghayan64@gmail.com
+          alerts:
+            - on-update-failure
+            - on-flow-failure
+            - on-update-fatal-failure
+      serverless: true

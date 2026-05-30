@@ -1,0 +1,39 @@
+resources:
+  jobs:
+    firstJOB:
+      name: firstJOB_bundle
+      email_notifications:
+        on_failure: 
+          - masoud.aghayan64@gmail.com
+      timeout_seconds: 3600
+      health:
+        rules:
+          - metric: RUN_DURATION_SECONDS
+            op: GREATER_THAN
+            value: 1800
+      trigger:
+        pause_status: UNPAUSED
+        periodic:
+          interval: 1
+          unit: WEEKS
+      tasks:
+        - task_key: create_id_lookup_table_from_CSV_in_Volume
+          notebook_task:
+            notebook_path: ../src/ingest_from_blob.py
+          existing_cluster_id: 0505-201209-n825cf5e
+        - task_key: Multi_Hop_Pipeline
+          depends_on:
+            - task_key: create_id_lookup_table_from_CSV_in_Volume
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.pipeline_first_etl_pipeline.id}
+            full_refresh: false
+        - task_key: Visualization_Dashboard
+          depends_on:
+            - task_key: Multi_Hop_Pipeline
+          dashboard_task:
+            subscription: {}
+            warehouse_id: c9212f590fc9d653
+            dashboard_id: 01f14958152b1f8399aa8cde7f9f967f
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
